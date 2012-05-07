@@ -11,7 +11,9 @@ matplotlib.use('GTK')
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_gtk import FigureCanvasGTK as FigureCanvas
 
-from gene_element import *
+#collection of gene elements
+from gene_collection import *
+
 
 #===============================================================================
 #===============================================================================
@@ -56,8 +58,6 @@ class mainGUI:
         self.main_Box.show_all()
         self.window.show_all()
 
-        self.objects = []
-
 
     #====================
     #Init helpers
@@ -71,7 +71,7 @@ class mainGUI:
         self.design_Area.set_has_window(True)
         box.pack_start(self.design_Area,True,True,0)
         self.design_Area.show()
-        self.elementList = []
+        self.gene_Collection = Gene_Collection(self.design_Area)
         self.design_Area.connect("button-press-event",self.create_Object,"")
 
     def setup_Buttons(self,box):
@@ -116,11 +116,19 @@ class mainGUI:
         print "clear"
     def runSim(self, widget, event, data=None):
         print "sim"
+        if(self.gene_Collection.Build_Simulation()):
+            self.gene_Collection.Run_Simulation()
+        else:
+            print "error building simulation"
+        
+            
+
     def create_Object(self, widget, event, data=None):
         if(event.button == 1):
             if(event.type == gtk.gdk._2BUTTON_PRESS):           
-                self.objects.append(Gene_Element(widget,event.x,event.y))        
-
+                self.gene_Collection.Add_New(event)
+#    def process_change(self,widget,change_command,data):
+#        print "Got: ",change_command,data
 
         
 #===============================================================================
