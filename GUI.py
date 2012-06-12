@@ -31,8 +31,8 @@ class mainGUI:
         self.window.connect("delete_event",self.close)
         
         #window size values
-        self.x_size = 800
-        self.y_size = 600
+        self.x_size = 640
+        self.y_size = 480
         self.design_Window_Fraction_x = 1.0
         self.design_Window_Fraction_y = 0.5
         self.button_Window_Fraction_x = 0.1
@@ -73,7 +73,7 @@ class mainGUI:
         self.design_Area.show()
         self.gene_Collection = Gene_Collection(self.design_Area)
         self.design_Area.connect("button-press-event",self.create_Object,"")
-
+        
     def setup_Buttons(self,box):
         self.button_Box = gtk.VBox(False,0)
 

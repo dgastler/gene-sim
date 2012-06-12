@@ -38,8 +38,8 @@ class Gene_Collection(gobject.GObject):
 
     def Add_New(self,event):
         #Add a new blank gene element
-        self.element_list.append(Gene_Element(self,
-                                              event.x,event.y))
+        self.element_list.append(Gene_Element_GUI(self,
+                                                  event.x,event.y))
 
     def Process_Update(self,widget,update_Type,data):
         print update_Type,data

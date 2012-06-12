@@ -4,16 +4,17 @@ import math
 #Repressor/activator computation
 #===============================================================================
 #All are unitless so we can handle units at a higher level
-#===============================================================================
+#===========================================================o====================
+def regfunc_None(x,k,n):
+    return 0
 def regfunc_Activator(x,k,n,reg):
     return 1/(1+math.pow(k/x,n))
 def regfunc_Repressor(x,k,n):
     return 1/(1+math.pow(x/k,n))
 def regfunc_Decay(x,k,n,reg):
     return x
-def regfunc_None(x,k,n):
-    return 0
 
+regtypes = ["reg_None","reg_Activator","reg_Repressor","reg_Decay"]
 #===============================================================================
 #===============================================================================
 #Regulation functor
