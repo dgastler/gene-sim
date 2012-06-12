@@ -15,14 +15,16 @@ class Gene_Settings:
         window.set_size_request(300,300)
         window.set_title("Configure Gene Element");
         window.connect("delete_event",self.Close_Window)
-        
+
+        print "gene_settings ", this_gene.name, "\n"
+
         #Main division
         window_Main_VBox = gtk.VBox()
         window.add(window_Main_VBox)
         
         #add name entry linked to the this_gene's name
         name_Entry = gtk.Entry()
-        name_Entry.set_size_request(100,50)
+        name_Entry.set_size_request(100,25)
         name_Entry.set_max_length(25)
         name_Entry.connect("changed",
                            self.calling_callback,
@@ -37,7 +39,7 @@ class Gene_Settings:
 
         #make a button to make new entries
         new_button = gtk.Button("New interaction");
-        new_button.set_size_request(100,50)
+        new_button.set_size_request(100,25)
         new_button.connect("clicked",
                            self.Add_Interaction,
                            gene_collection,
@@ -47,7 +49,7 @@ class Gene_Settings:
 
         #add a list of gene_interactions in a frame
         interactions_frame = gtk.Frame("Interactions")
-        self.interactions_box = gtk.HBox()
+        self.interactions_box = gtk.VBox()
         interactions_frame.add(self.interactions_box)
         interactions_frame.show()
         window_Main_VBox.pack_start(interactions_frame)

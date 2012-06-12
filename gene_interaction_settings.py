@@ -8,11 +8,15 @@ from regulator import *
 class Gene_Interaction_Settings:
     def calling_callback(self, widget,funct,value):
         funct(value)
+    def call_popup(self,menu,event):
+        if event.type == gtk.gdk.BUTTON_PRESS:
+            menu.popup(None, None, None, event.button, event.time)
     def __init__(self,gene_collection,this_gene,gene_interaction):
         #properties in gene_interaction 
         
         #graphical values
         self.frame = gtk.Frame("")
+        self.frame.set_size_request(100,25)
         self.box = gtk.HBox()
         self.frame.add(self.box)        
                 
@@ -23,8 +27,9 @@ class Gene_Interaction_Settings:
                                  this_gene,
                                  gene_interaction)
         self.source_Menu_Button.connect_object("event",
-                                               lambda w,x:x.pop_up(),
+                                               self.call_popup,
                                                self.source_Menu)        
+        self.source_Menu.show()
         self.source_Menu_Button.show()
         self.box.pack_start(self.source_Menu_Button)
         #add pop up
@@ -32,10 +37,11 @@ class Gene_Interaction_Settings:
         #add interaction type pulldown
         self.type_Menu_Button = gtk.Button("Type")
         self.type_Menu = gtk.Menu()
-        self.Add_Types_To_Menu(this_gene)
+        self.Add_Types_To_Menu(gene_interaction)
         self.type_Menu_Button.connect_object("event",
-                                             lambda w,e,x:x.pop_up(),
+                                             self.call_popup,
                                              self.type_Menu)        
+        self.type_Menu.show()
         self.type_Menu_Button.show()
         self.box.pack_start(self.type_Menu_Button)
         #add pop up
@@ -75,7 +81,6 @@ class Gene_Interaction_Settings:
 
         self.box.show()
         self.frame.show()
-        print "Hi!\n"
 
     def Add_Sources_To_Menu(self,
                             gene_collection,
@@ -83,6 +88,8 @@ class Gene_Interaction_Settings:
                             gene_interaction):
         #manually add this element because it isn't on the list yet
         #this way it is always first
+        print "name:", this_gene.name, "\n"
+
         this_Name_Item = gtk.MenuItem(this_gene.name)
         this_Name_Item.connect("activate",
                                self.calling_callback,
@@ -110,26 +117,27 @@ class Gene_Interaction_Settings:
                              self.Select_Type,
                              gene_interaction,
                              regtype)
+            self.type_Menu.append(type_Item)
             type_Item.show()
 
-    def Select_Type(self,gene_interaction,regtype):
+    def Select_Type(self,widget,gene_interaction,regtype):
         gene_interaction.set_Interaction_Type(regtype)
-
+        self.type_Menu_Button.set_label(regtype)
         if(regtype == "reg_None"):
             self.show_Rate = False
             self.show_K = False
             self.show_N = False
-        elif(regType == "reg_Decay"):    
+        elif(regtype == "reg_Decay"):    
             #only source for decay is self
             self.source_Menu.set_active(0)
             self.show_Rate = True
             self.show_K = False
             self.show_N = False
-        elif(regType == "reg_Activator"):
+        elif(regtype == "reg_Activator"):
             self.show_Rate = True
             self.show_K = True
             self.show_N = True
-        elif(regType == "reg_Repressor"):
+        elif(regtype == "reg_Repressor"):
             self.show_Rate = True
             self.show_K = True
             self.show_N = True
@@ -137,7 +145,7 @@ class Gene_Interaction_Settings:
             self.show_Rate = False
             self.show_K = False
             self.show_N = False
-        Update_Visible()
+        self.Update_Visible()
 
     def Update_Visible(self):
         if(self.show_Rate):

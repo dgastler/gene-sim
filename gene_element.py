@@ -55,6 +55,7 @@ class Gene_Element_GUI:
             self.toggle_Select()
         elif(event.button == 3):
             #adding a new interaction to the Gene_object
+            print "gene_element ",self.name,"\n"
             gene_settings = Gene_Settings(self.gene_collection,self)
 
 
