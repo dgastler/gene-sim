@@ -16,34 +16,37 @@ class Gene_Settings:
         window.set_title("Configure Gene Element");
         window.connect("delete_event",self.Close_Window)
 
-        print "gene_settings ", this_gene.name, "\n"
 
         #Main division
         window_Main_VBox = gtk.VBox()
         window.add(window_Main_VBox)
         
+
+        print "gene_settings (before name_Entry) \"", this_gene.name, "\"\n"
         #add name entry linked to the this_gene's name
-        name_Entry = gtk.Entry()
-        name_Entry.set_size_request(100,25)
-        name_Entry.set_max_length(25)
-        name_Entry.connect("changed",
-                           self.calling_callback,
-                           this_gene.set_Name,
-                           name_Entry.get_text())
-        name_Entry.set_text(this_gene.name)
-        name_Entry.select_region(0,len(this_gene.name))
-        name_Entry.set_editable(True)
-        name_Entry.show()
-        window_Main_VBox.pack_start(name_Entry)
+        self.name_Entry = gtk.Entry()
+        self.name_Entry.set_size_request(100,25)
+        self.name_Entry.set_max_length(25)
+        self.name_Entry.set_text(this_gene.name)
+        self.name_Entry.select_region(0,len(this_gene.name))
+        self.name_Entry.set_editable(True)
+        self.name_Entry.connect("changed",
+                           self.Name_Change,
+                           this_gene
+                           )
+        self.name_Entry.show()
+        window_Main_VBox.pack_start(self.name_Entry)
 
 
         #make a button to make new entries
-        new_button = gtk.Button("New interaction");
+        new_button = gtk.Button("New interaction")
         new_button.set_size_request(100,25)
+        print "gene_settings (before connect) \"", this_gene.name, "\"\n"
         new_button.connect("clicked",
                            self.Add_Interaction,
                            gene_collection,
-                           this_gene);
+                           this_gene)
+        print "gene_settings (after connect) \"", this_gene.name, "\"\n"
         new_button.show()
         window_Main_VBox.pack_start(new_button)
 
@@ -56,21 +59,38 @@ class Gene_Settings:
 
         #add all existing interactions
         self.interaction_List = []
-        for interaction in this_gene.regulation_Interactions:
-            current_interaction = Gene_Interaction_Settings(gene_collection,this_gene,interaction)
-            self.interaction_List.append(current_interaction)
-            self.interactions_box.pack_start(current_interaction.frame)
+        self.Set_Interactions(this_gene)        
 
         self.interactions_box.show()
         window_Main_VBox.show()
         window.show()
         
+    def Set_Interactions(self,this_gene):
+        #clear the existing elements
+        for index in range(len(self.interaction_List)):
+            self.interaction_List.pop().destroy()
+        #create new interactions
+        for interaction in this_gene.regulation_Interactions:
+            current_interaction = Gene_Interaction_Settings(gene_collection,this_gene,interaction)
+            self.interaction_List.append(current_interaction)
+            self.interactions_box.pack_start(current_interaction.frame)
+
+
+    def Name_Change(self,widget,this_gene):
+        #update the gene's name
+        this_gene.set_Name(self.name_Entry.get_text())
+        #update this_gene's graphics
+        this_gene.update_Frame_Name()
+        #update the interaction objects to reflect this
+        self.Set_Interactions(this_gene)
+
     def Close_Window(self, widget, event, data=None):
         print "should emit signal"
 
-    def Add_Interaction(self, widget,
+    def Add_Interaction(self,widget,
                         gene_collection,
                         this_gene):
+        print "gene_settings (new) \"", this_gene.name, "\"\n"
         blank_interaction = regulation()
         this_gene.regulation_Interactions.append(blank_interaction)
         current_interaction = Gene_Interaction_Settings(gene_collection,

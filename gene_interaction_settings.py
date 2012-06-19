@@ -56,6 +56,7 @@ class Gene_Interaction_Settings:
         self.rate_Entry.set_text(str(gene_interaction.rate_Constant))
         self.rate_Entry.select_region(0,len(self.rate_Entry.get_text()))
         self.rate_Entry.set_editable(True)
+        self.rate_Entry.set_size_request(20,20)
         self.box.pack_start(self.rate_Entry)
 
         #add K input
@@ -68,6 +69,7 @@ class Gene_Interaction_Settings:
         self.K_Entry.set_text(gene_interaction.rate_Constant)
         self.K_Entry.select_region(0,len(gene_interaction.rate_Constant))
         self.K_Entry.set_editable(True)
+        self.K_Entry.set_size_request(20,20)
         self.box.pack_start(self.K_Entry)
 
         #add N value
@@ -77,6 +79,7 @@ class Gene_Interaction_Settings:
                              self.calling_callback,
                              gene_interaction.set_N,
                              self.N_Entry.get_value())
+        self.N_Entry.set_size_request(20,20)
         self.box.pack_start(self.N_Entry)
 
         self.box.show()
@@ -92,8 +95,8 @@ class Gene_Interaction_Settings:
 
         this_Name_Item = gtk.MenuItem(this_gene.name)
         this_Name_Item.connect("activate",
-                               self.calling_callback,
-                               gene_interaction.set_Name,
+                               self.Select_Source,
+                               gene_interaction,
                                this_gene.name)
         self.source_Menu.append(this_Name_Item)
         this_Name_Item.show()
@@ -104,11 +107,16 @@ class Gene_Interaction_Settings:
             if(element.name != this_gene.name):
                 name_Item = gtk.MenuItem(element.name)
                 name_Item.connect("activate",
-                                  self.calling_callback,
-                                  gene_interaction.set_Name,
+                                  self.Select_Source,
+                                  gene_interaction,
                                   element.name)
                 self.source_Menu.append(name_Item)
                 name_Item.show()
+
+    def Select_Source(self,widget,gene_interaction,source):
+        gene_interaction.set_Name(source)
+        self.source_Menu_Button.set_label(source)
+        
 
     def Add_Types_To_Menu(self,gene_interaction):
         for regtype in regtypes:
@@ -152,11 +160,24 @@ class Gene_Interaction_Settings:
             self.rate_Entry.show()
         else:
             self.rate_Entry.hide()
+        
         if(self.show_K):
             self.K_Entry.show()
         else:
             self.K_Entry.hide()
+            
         if(self.show_N):
             self.N_Entry.show()
         else:
             self.N_Entry.hide()
+
+    def destroy(self):
+        self.source_Menu_Button.destroy()
+        self.type_Menu_Button.destroy()
+        self.rate_Entry.destroy()
+        self.K_Entry.destroy()
+        self.N_Adjust.destroy()
+        self.box.destroy()
+        self.frame.destroy()
+
+        

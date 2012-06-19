@@ -1,4 +1,4 @@
-#!/sw/bin/python2.6
+#!/usr/bin/python2
 
 #GTK for GUI
 import pygtk
